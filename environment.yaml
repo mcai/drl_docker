@@ -1,0 +1,19 @@
+name: env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10.8
+  - pip
+  - pip:
+    - numpy==1.23.5
+    - matplotlib==3.6.2
+    - pandas==1.5.2
+    - pyyaml==6.0
+    - scipy==1.9.3
+    - seaborn==0.12.1
+    - shapely==2.0.0
+    - svgwrite==1.4.3
+    - tqdm==4.64.1
+    - torch==1.13.0
+    - torchvision==0.14.0
