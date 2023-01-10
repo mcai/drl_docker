@@ -51,3 +51,6 @@ RUN cd /opt && \
     cd /opt/scikit-geometry && \
     sed -i 's/CGAL_DEBUG=1/CGAL_DEBUG=0/g' setup.py && \
     python setup.py install
+    
+# Add conda to PATH
+ENV PATH /opt/conda/bin:$PATH
