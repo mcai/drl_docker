@@ -41,29 +41,27 @@ RUN wget https://repo.anaconda.com/archive/Anaconda3-2022.10-Linux-x86_64.sh && 
     bash Anaconda3-2022.10-Linux-x86_64.sh -b -p $CONDA_DIR && \
     rm Anaconda3-2022.10-Linux-x86_64.sh
 
-# conda init bash on every bash shell
-RUN echo ". $CONDA_DIR/etc/profile.d/conda.sh" >> ~/.bashrc
-
-# conda init bash on every RUN command
-RUN conda init bash
-ENV PATH $CONDA_DIR/bin:$PATH
-
 # Create Conda environment "env" from the YAML file
 COPY environment.yaml .
-RUN conda env create -f environment.yaml
+RUN source $CONDA_DIR/etc/profile.d/conda.sh && conda env create -f environment.yaml
 
-# conda activate "env" on every bash shell
-RUN echo "conda activate env" >> ~/.bashrc
-
-# conda activate "env" on every RUN command
-RUN conda activate env
+# conda init bash on every RUN command
+RUN source $CONDA_DIR/etc/profile.d/conda.sh && conda init bash
 
 # Install scikit-geometry
-RUN cd /opt && \
+RUN source $CONDA_DIR/etc/profile.d/conda.sh && \
+    conda activate env && \
+    cd /opt && \
     git clone https://github.com/scikit-geometry/scikit-geometry.git && \
     cd /opt/scikit-geometry && \
     sed -i 's/CGAL_DEBUG=1/CGAL_DEBUG=0/g' setup.py && \
     python setup.py install
+
+# conda init bash on every bash shell
+RUN echo "source $CONDA_DIR/etc/profile.d/conda.sh" >> ~/.bashrc
+
+# conda activate "env" on every bash shell
+RUN echo "conda activate env" >> ~/.bashrc
 
 # Entry point
 CMD ["/bin/bash"]
