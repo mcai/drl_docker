@@ -19,8 +19,14 @@ RUN conda update -n base -c defaults conda
 COPY environment.yaml .
 RUN conda env create -f environment.yaml
 
-# Override default shell and use bash
-SHELL ["conda", "run", "-n", "env", "/bin/bash", "-c"]
+# conda init bash
+RUN conda init bash
+
+# conda activate env
+RUN echo "source activate env" > ~/.bashrc
+
+# source ~/.bashrc
+RUN source ~/.bashrc
 
 # Install cmake
 RUN cd /opt && \
