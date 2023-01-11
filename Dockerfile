@@ -1,4 +1,7 @@
-from nvidia/cuda:11.2.2-cudnn8-runtime-ubuntu20.04
+FROM nvidia/cuda:11.2.2-cudnn8-runtime-ubuntu20.04
+
+# Use the bash shell instead of sh (default) for the following RUN commands
+SHELL ["/bin/bash","-c"]
 
 # Install system packages
 RUN apt-get install -y wget screen git build-essential
@@ -37,33 +40,22 @@ RUN wget https://repo.anaconda.com/archive/Anaconda3-2022.10-Linux-x86_64.sh && 
     bash Anaconda3-2022.10-Linux-x86_64.sh -b -p $CONDA_DIR && \
     rm Anaconda3-2022.10-Linux-x86_64.sh
 
-# Make non-activate conda commands available
-ENV PATH=$CONDA_DIR/bin:$PATH
-# Make conda activate command available from /bin/bash --login shells
-RUN echo ". $CONDA_DIR/etc/profile.d/conda.sh" >> ~/.profile
-# Make conda activate command available from /bin/bash --interative shells
-RUN conda init bash
-
-# Create Conda environment from the YAML file
-COPY environment.yaml .
-RUN conda env create -f environment.yaml
-
-SHELL ["/bin/bash","-c"]
-
 # conda init bash
 RUN conda init bash
 
-# conda activate env
-RUN echo "conda activate env" > ~/.bashrc
+# Create Conda environment "env" from the YAML file
+COPY environment.yaml .
+RUN conda env create -f environment.yaml
 
-# Make RUN commands use the new environment
-SHELL ["conda", "run", "-n", "env", "/bin/bash", "-c"]
+# conda activate "env"
+RUN conda activate env
 
 # Install scikit-geometry
 RUN cd /opt && \
     git clone https://github.com/scikit-geometry/scikit-geometry.git && \
     cd /opt/scikit-geometry && \
     sed -i 's/CGAL_DEBUG=1/CGAL_DEBUG=0/g' setup.py && \
-    python setup.py install
-    
+    python setup.py Install
+
+# Entry point
 ENTRYPOINT ["/bin/bash"]
