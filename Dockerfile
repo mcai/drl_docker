@@ -15,6 +15,9 @@ RUN ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime
 # Install CGAL dependencies
 RUN apt-get install -y libgmp-dev libmpfr-dev libboost-all-dev libgl1-mesa-dev libglu1-mesa-dev
 
+# Get number of processors
+RUN export NPROC=$(nproc)
+
 # Install CGAL 5.2.4
 RUN cd /opt && \
     wget https://github.com/CGAL/cgal/releases/download/v5.2.4/CGAL-5.2.4.tar.xz && \
@@ -23,8 +26,10 @@ RUN cd /opt && \
     mkdir build && \
     cd build && \
     cmake -DCMAKE_BUILD_TYPE=Release .. && \
-    make -j8 && \
-    make install
+    make -j$NPROC && \
+    make install && \
+    cd /opt && \
+    rm -rf CGAL-5.2.4 CGAL-5.2.4.tar.xz
 
 # Install Anaconda
 ENV CONDA_DIR /opt/conda
