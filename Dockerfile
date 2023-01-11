@@ -1,4 +1,4 @@
-from nvidia/cuda:11.7.1-cudnn8-runtime-ubuntu20.04
+from nvidia/cuda:11.2.2-cudnn8-runtime-ubuntu20.04
 
 # Install system packages
 RUN apt-get update && \
