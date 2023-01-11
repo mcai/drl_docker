@@ -28,12 +28,17 @@ RUN cd /opt && \
     make install
 
 # Install Miniconda
+ENV CONDA_DIR /opt/conda
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
-    bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/conda && \
+    bash Miniconda3-latest-Linux-x86_64.sh -b -p $CONDA_DIR && \
     rm Miniconda3-latest-Linux-x86_64.sh
 
-# Add conda to PATH
-ENV PATH /opt/conda/bin:$PATH
+# Make non-activate conda commands available
+ENV PATH=$CONDA_DIR/bin:$PATH
+# Make conda activate command available from /bin/bash --login shells
+RUN echo ". $CONDA_DIR/etc/profile.d/conda.sh" >> ~/.profile
+# Make conda activate command available from /bin/bash --interative shells
+RUN conda init bash
 
 # Update conda
 RUN conda update -n base -c defaults conda
@@ -50,9 +55,14 @@ RUN conda init bash
 # conda activate env
 RUN echo "conda activate env" > ~/.bashrc
 
+# Make RUN commands use the new environment
+SHELL ["conda", "run", "-n", "env", "/bin/bash", "-c"]
+
 # Install scikit-geometry
 RUN cd /opt && \
     git clone https://github.com/scikit-geometry/scikit-geometry.git && \
     cd /opt/scikit-geometry && \
     sed -i 's/CGAL_DEBUG=1/CGAL_DEBUG=0/g' setup.py && \
     python setup.py install
+    
+ENTRYPOINT ["/bin/bash"]
