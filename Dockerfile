@@ -42,14 +42,13 @@ RUN conda update -n base -c defaults conda
 COPY environment.yaml .
 RUN conda env create -f environment.yaml
 
+SHELL ["/bin/bash","-c"]
+
 # conda init bash
 RUN conda init bash
 
 # conda activate env
-RUN echo "source activate env" > ~/.bashrc
-
-# . ~/.bashrc
-RUN /bin/bash -c "source ~/.bashrc"
+RUN echo "conda activate env" > ~/.bashrc
 
 # Install scikit-geometry
 RUN cd /opt && \
@@ -57,6 +56,3 @@ RUN cd /opt && \
     cd /opt/scikit-geometry && \
     sed -i 's/CGAL_DEBUG=1/CGAL_DEBUG=0/g' setup.py && \
     python setup.py install
-
-# run BASH on container start
-CMD ["/bin/bash"]
