@@ -48,8 +48,8 @@ RUN conda init bash
 # conda activate env
 RUN echo "source activate env" > ~/.bashrc
 
-# source ~/.bashrc
-RUN source ~/.bashrc
+# . ~/.bashrc
+RUN /bin/bash -c "source ~/.bashrc"
 
 # Install scikit-geometry
 RUN cd /opt && \
