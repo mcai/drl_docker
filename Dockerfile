@@ -45,6 +45,7 @@ RUN wget https://repo.anaconda.com/archive/Anaconda3-2022.10-Linux-x86_64.sh && 
 RUN echo ". $CONDA_DIR/etc/profile.d/conda.sh" >> ~/.bashrc
 
 # conda init bash on every RUN command
+RUN conda init bash
 ENV PATH $CONDA_DIR/bin:$PATH
 
 # Create Conda environment "env" from the YAML file
