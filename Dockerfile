@@ -1,8 +1,7 @@
 from nvidia/cuda:11.2.2-cudnn8-runtime-ubuntu20.04
 
 # Install system packages
-RUN apt-get update && \
-    apt-get install -y wget screen git build-essential
+RUN apt-get install -y wget screen git build-essential
 
 # Install cmake
 RUN cd /opt && \
@@ -27,11 +26,11 @@ RUN cd /opt && \
     make -j8 && \
     make install
 
-# Install Miniconda
+# Install Anaconda
 ENV CONDA_DIR /opt/conda
-RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
-    bash Miniconda3-latest-Linux-x86_64.sh -b -p $CONDA_DIR && \
-    rm Miniconda3-latest-Linux-x86_64.sh
+RUN wget https://repo.anaconda.com/archive/Anaconda3-2022.10-Linux-x86_64.sh && \
+    bash Anaconda3-2022.10-Linux-x86_64.sh -b -p $CONDA_DIR && \
+    rm Anaconda3-2022.10-Linux-x86_64.sh
 
 # Make non-activate conda commands available
 ENV PATH=$CONDA_DIR/bin:$PATH
@@ -39,9 +38,6 @@ ENV PATH=$CONDA_DIR/bin:$PATH
 RUN echo ". $CONDA_DIR/etc/profile.d/conda.sh" >> ~/.profile
 # Make conda activate command available from /bin/bash --interative shells
 RUN conda init bash
-
-# Update conda
-RUN conda update -n base -c defaults conda
 
 # Create Conda environment from the YAML file
 COPY environment.yaml .
