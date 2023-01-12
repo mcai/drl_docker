@@ -41,6 +41,9 @@ RUN wget https://repo.anaconda.com/archive/Anaconda3-2022.10-Linux-x86_64.sh && 
     bash Anaconda3-2022.10-Linux-x86_64.sh -b -p $CONDA_DIR && \
     rm Anaconda3-2022.10-Linux-x86_64.sh
 
+# Update Conda
+RUN source $CONDA_DIR/etc/profile.d/conda.sh && conda update -n base -c defaults conda
+
 # Create Conda environment "env" from the YAML file
 COPY environment.yaml .
 RUN source $CONDA_DIR/etc/profile.d/conda.sh && conda env create -f environment.yaml
