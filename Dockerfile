@@ -57,15 +57,14 @@ RUN source $CONDA_DIR/etc/profile.d/conda.sh && \
     sed -i 's/CGAL_DEBUG=1/CGAL_DEBUG=0/g' setup.py && \
     python setup.py install
 
-# Install TexLive and Pandoc to write papers
-sudo apt-get install texlive-full
-sudo apt-get install pandoc pandoc-citeproc
-
 # conda init bash on every bash shell
 RUN echo "source $CONDA_DIR/etc/profile.d/conda.sh" >> ~/.bashrc
 
 # conda activate "env" on every bash shell
 RUN echo "conda activate env" >> ~/.bashrc
+
+# Install TexLive and Pandoc to write papers
+RUN apt-get install -y texlive-full pandoc pandoc-citeproc
 
 # Entry point
 CMD ["/bin/bash"]
