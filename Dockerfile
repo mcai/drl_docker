@@ -1,4 +1,4 @@
-FROM nvidia/cuda:11.2.2-cudnn8-runtime-ubuntu20.04
+FROM nvidia/cuda:11.2.2-cudnn8-devel-ubuntu20.04
 
 # Use the bash shell instead of sh (default) for the following RUN commands
 SHELL ["/bin/bash","-c"]
